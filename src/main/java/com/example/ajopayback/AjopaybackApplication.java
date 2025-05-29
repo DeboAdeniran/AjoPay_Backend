@@ -36,7 +36,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class AjopaybackApplication {
 
 	public static void main(String[] args) {
-		Dotenv dotenv = Dotenv.load();
+		Dotenv dotenv = Dotenv.configure()
+				.ignoreIfMissing()
+				.load();
+
 		SpringApplication.run(AjopaybackApplication.class, args);
 	}
 
