@@ -7,6 +7,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,8 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    private String secretkey = null;
+    @Value("${SECRET_KEY}")
+    private String secretkey;
 
     public String generateToken(LoginDto loginDto){
         Map<String, Object> claims = new HashMap<>();
@@ -38,14 +40,10 @@ public class JwtService {
     }
 
     private SecretKey generatedKey() {
-        byte[] decode = Decoders.BASE64.decode(getSecretKey());
+        byte[] decode = Decoders.BASE64.decode(secretkey);
         return Keys.hmacShaKeyFor(decode);
     }
 
-    private String getSecretKey() {
-        Dotenv dotenv = Dotenv.configure().load();
-        return secretkey = dotenv.get("SECRET_KEY");
-    }
     public String extractUserName(String token) {
         return extractClaims(token, Claims::getSubject);
     }
